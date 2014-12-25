@@ -1,0 +1,64 @@
+<script type="text/javascript">
+    document.getElementById('headerLabel').innerHTML = "Profile";
+
+    document.getElementById('userinfo').innerHTML=
+        window.localStorage.getItem("userinfo");
+        //document.cookie.replace(/(?:(?:^|.*;\s*)userinfo\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var userinfo = JSON.parse(document.getElementById('userinfo').innerHTML);
+    document.getElementById('name').innerHTML=
+        '<center><br><img src="img/man.png" width="20%"><br><h2>'+userinfo['name']+" "+userinfo['surname']+"</h2></center>";
+
+
+	$('#questsearch').click(function(){
+        var userinfo = JSON.parse(document.getElementById('userinfo').innerHTML);
+		var sendData = userinfo['id'];
+        $("div#main_screen").load("pg/selectquest.html");
+
+	    $.ajax({
+            type: "POST",
+            url: "",
+            data: ""+sendData,
+            success: function(returnD) {
+                
+            }
+        });
+	});
+</script>
+
+
+    <div style="position:relative; top:5%; width:100%; height:25%;" id="name"></div>
+    <div class="buttonsOnTheMainMenu"><br>
+        
+        <br><br>
+        <div style="font-size: 1.2em; text-align:center;">
+
+        <div class="buttonToTap" id="questsearch" style="position:absolute; left:0%;  width: 33%;">
+            <img src="img/search_for_quest_552.png" width="70%">
+            <br>
+            Quests
+        </div>
+
+        <div class="buttonToTap" style="position:absolute; left:33%; width: 33%;" onclick='$("div#main_screen").load("pg/raiting.html");'>
+            <img src="img/points_533.png"width="70%">
+            <br>
+            Scores
+        </div>
+
+        <div class="buttonToTap" style="position:absolute; right:0%; width: 33%;" onclick='$("div#main_screen").load("pg/prizes.html");'>
+            <img src="img/gifts_533.png" width="70%">
+            <br>Gifts
+        </div>
+
+        </div>
+    </div>  
+
+    <div style="position:relative; top:20%;">
+        <div style="width:100%; border: 0px solid black; height:40px; margin-top:40%;">
+            <img class="buttonToTap" align="left" src="img/star.png" height="100%">
+            <img class="buttonToTap" style="position:relative; left:40%;" src="img/info.png" height="100%" onclick='$("div#main_screen").load("pg/aboutus.html");'>
+            <img class="buttonToTap" onclick='window.localStorage.setItem("loggenIn", "false");location.reload(); ' align="right" src="img/logout.png" height="100%">
+        </div>
+    </div>
+
+
+

@@ -1,0 +1,213 @@
+html{
+	height: 100%;
+	margin: 0; padding: 0;
+	font-family: helvetica;
+	overflow: hidden;
+	background-color: rgb(217, 220, 225);
+}
+
+body {
+	height: 100%;
+	margin: 0; padding: 0;
+	overflow: hidden;
+
+}
+
+
+#header{
+	width:100%;
+	height: 10%;
+	border: 1px solid rgb(51, 51, 51);	
+	background-color: rgb(51, 51, 51);
+}
+#headerLabel{
+
+	padding: 5px;
+	margin-top: 0%;
+	padding-right: 70px;
+	font-size: 1.7em;
+	color: white;
+}
+
+#homebutton{
+	position: absolute;
+	right: 0px;
+	top:0px;
+	float: right;
+	height: 80%;
+	width:32px;
+	opacity: 0.9;
+	margin-right:2%; 
+
+}
+
+#homebutton:hover{
+	opacity: 1;
+}
+
+#login, #register{
+	background-color: rgb(255, 80, 70);
+	width:60%;
+	margin-top: 10px;
+	left:20%;
+	font-size: 1.6em;
+	font-family: Helvetica;
+	color: white;
+	border: 0px;
+}
+
+#login{
+
+}
+
+#register{
+
+}
+
+
+
+
+div.questblock{
+	-webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+	width: 100%;
+	height: 100px;
+	border: 0px solid rgb(178, 178, 178);
+	overflow: hidden;
+	z-index: 200;
+	margin-bottom: 5px;
+	position: relative;
+	background-color: rgb(178, 178, 178);
+}
+
+div.questblock.long{
+	-webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+	height: 200px;
+}
+
+#map_canvas{ 
+	height: 200px; margin: 0; padding: 0; width: 400px;
+	position: relative;
+	top:0px;
+	z-index: 100;
+}
+
+#main_screen{
+	top:0px;
+	position: relative;
+}
+
+#questlist{
+	position: relative;
+}
+
+
+#questElements{
+	position: absolute;
+	z-index: 250;
+}
+
+.buttonSt{
+	background-color: rgb(255, 80, 70);
+	width:60%;
+	position: absolute;
+	left:20%;
+	float: left;
+	font-size: 1.2em;
+	padding: 5px;
+	font-family: Helvetica;
+	color: white;
+	border: 0px;
+}
+
+input{
+	width: 57%;
+	background-color: rgb(242,242,242);
+}
+
+p.label{
+	font-size: 1.2em;
+	font-family: Helvetica;
+	margin-bottom: 3px;
+	color: black;
+}
+
+.questNumber{
+	font-family: monospace;
+	font-size:3.3em; 
+	font-weight: bold; 
+	float: left;
+	padding-top: 20px;
+	text-align: center;
+	height: 70px;
+	width: 90px;
+	margin: 5px;
+	border-radius: 100px;
+	color: rgb(178, 178, 178 );
+	background-color: rgb(255, 255, 255);
+}
+
+.startButton{
+	font-family: monospace;
+	font-size:1.8em; 
+	font-weight: bold; 
+	float: right;
+	padding-top: 30px;
+	text-align: center;
+	height: 60px;
+	width: 90px;
+	margin: 10px;
+	right: 0px;
+	top: 100px;
+	position: absolute;
+	border-radius: 20px;
+	color: rgb(178, 178, 178 );
+	background-color: rgb(255, 255, 255);
+
+}
+
+.buttonToTap{
+	opacity: 0.9;
+	
+}
+.buttonToTap:hover{
+	opacity: 1;
+}
+
+div.buttonsOnTheMainMenu
+{
+	position:relative; 
+	top: 10%;
+}
+
+div.buttonsOnTheMainMenu div div img:hover{
+	border-radius: 100px;
+	box-shadow: 2px 2px 18px -5px rgba(0,0,0,0.8);
+}
+
+div#loginRegisterForm input{
+	padding: 3px;
+}
+
+.loginOrRegisterButton{
+	background-color: rgb(255, 80, 70);
+	width:70%;
+	height: 48px;
+	position: relative;
+	left:0%;
+	float: left;
+	font-size: 1.2em;
+	padding: 5px;
+	font-family: Helvetica;
+	color: white;
+	border: 0px;
+}
+
+div.abzac{
+	margin: 20px;
+}
+
+div.abzac p{
+	text-indent: 30px;
+}

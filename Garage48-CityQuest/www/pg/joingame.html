@@ -1,0 +1,65 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('div#refreshWaiting').fadeOut(0);
+
+		document.getElementById('refreshGames').onclick=function(){
+			$('div#refreshWaiting').fadeIn(0);
+			document.getElementById("availableGames").innerHTML = "<br>";
+	       	$.ajax({
+	            type: "POST",
+	            //url: "http://number.qbxdev.com/php/start_game.php",
+	            url: "http://number.qbxdev.com/php/availablegames.php",
+	            data: "",
+	            success: function(returnG) {
+	            	var some = JSON.parse(returnG);
+	            	for (var i = some.length - 1; i >= 0; i--) {
+	            		document.getElementById("availableGames").innerHTML+=
+	            			'<button onclick="joinGame('+some[i]+')">Game#'+some[i]+"</button><br>";
+	            	};
+	            	$('div#refreshWaiting').fadeOut(0);
+	            }
+        	});
+			
+		};
+
+
+
+	});
+
+	function joinGame(gameId){
+			//document.cookie="iAm=enemy";
+			//document.cookie="gameSessionId="+gameId;
+			window.localStorage.setItem("gameSessionId", gameId);
+            window.localStorage.setItem("iAm", "enemy");
+			//var userId = document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+			var userId = window.localStorage.getItem("userId");
+			var enemyname = $('#enemyname').val();
+
+            var dataString = 'enemyname=' + enemyname + '&userid=' + userId + '&gameid='+gameId;
+            $.ajax({
+                type: "POST",
+                //url: "http://number.qbxdev.com/php/start_game.php",
+                url: "http://number.qbxdev.com/php/joingame.php",
+                data: dataString,
+                success: function(returnG) {
+                    if(returnG=="true")
+	                    $("div#main_screen").load("pg/gamesession.html");
+	                else{alert(returnG);}
+                }
+            });
+
+		}
+</script>
+
+<div style="width:80%; margin:20px auto;">
+	<br>
+    Your Name:
+    <br>
+    <input type="text" size="35" name="enemyname" id="enemyname" value="Jose" /> <br>
+
+	<button id="refreshGames">Refresh </button> available games; 
+	<div id="refreshWaiting"><img src="img/723.gif" height="32px" width="25px"></div><br>
+	<div id="availableGames">
+		
+	</div>
+</div>

@@ -1,0 +1,49 @@
+<script type="text/javascript">
+    document.getElementById('headerLabel').innerHTML = "Register";
+    $('div#wait').fadeOut(0);
+    $('button#loginIn').click(function(){
+            $('div#wait').fadeIn(0);
+            var sendData = "opt=1&login="+$('#username').val()+"&password="+$('#password').val()+"&current_x=46&current_y=23&preferences=123"+"&name="+$('#name').val()+"&surname="+$('#surname').val()+"&e_mail="+$('#email').val();
+            $.ajax({
+                type: "GET",
+                url: "http://world-of-happiness.com:8123/data.php",
+                data: sendData,
+                success: function(returnD) {
+                    var userinfo = JSON.parse(returnD);
+                    if(userinfo['session_id']!="0")
+                    {
+                        //document.cookie="userinfo={\"id\":\"1\",\"name\":\"Dan\",\"surname\":\"Brown\"}";
+                        window.localStorage.setItem("userinfo", "{\"id\":\""+userinfo['session_id']+"\",\"name\":\""+userinfo['name']+"\",\"surname\":\""+userinfo['surname']+"\"}");
+
+                        $('div#homebutton').fadeIn(10);
+                        window.localStorage.setItem("loggenIn", "true");
+                        $("div#main_screen").load("pg/mainscreen.html");
+                    }else{
+                        alert("This E-mail or login is already registered!");
+                        $('div#wait').fadeOut(0);
+                    }
+                }
+            });
+    });
+</script>
+
+<center>
+<div id="loginRegisterForm">
+<p class="label">Name:</p>
+<input type="text" name="name" id="name" >
+<p class="label">Surname:</p>
+<input type="text" name="surname" id="surname" >
+<p class="label">E-mail:</p>
+<input type="text" name="email" id="email" >
+<p class="label">Username:</p>
+<input type="text" name="username" id="username" >
+<p class="label">Password:</p>
+<input type="password" name="password" id="password" ><br><br>
+<button id="loginIn" class="buttonSt">Register</button><br><br>
+<p class="label">or</p>
+<img src="img/facebook_login.png">
+</div>
+<br>
+<div id="wait"><img src="img/wait.gif"></div>
+</center>
+<div style="position:absolute; height:100px; width:100%; bottom:-20%;" onclick='$("div#main_screen").load("pg/starter.html");'></div>

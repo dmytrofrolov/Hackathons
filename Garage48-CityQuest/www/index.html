@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>CityQuest</title>
+    <link href="css/layout.css" rel="stylesheet" media="all">
+    <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHHHaNTbYlFnQOUcavgPjOfd_6LTEHgSY">
+    </script>
+
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+        window.localStorage.setItem("isQuest", "false");
+        var guid = (function() {
+          function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                       .toString(16)
+                       .substring(1);
+          }
+          return function() {
+            return s4() + s4() + '-' + s4() + '-' + s4();// + '-' +
+                   //s4() + '-' + s4() + s4() + s4();
+          };
+        })();
+
+        //start cookie
+        var uniqueId = guid();
+        //if(document.cookie.replace(/(?:(?:^|.*;\s*)loggenIn\s*\=\s*([^;]*).*$)|^.*$/, "$1")!="true"){
+        if(window.localStorage.getItem("loggenIn")!="true"){
+          //document.cookie="loggenIn=false";
+          window.localStorage.setItem("loggenIn", "false");
+          $("div#main_screen").load("pg/starter.html");
+          //$("div#main_screen").load("pg/aboutus.html");
+          $('div#homebutton').fadeOut(0);
+        }
+          else{
+            $("div#main_screen").load("pg/mainscreen.html");
+          }
+        //window.localStorage.setItem("userId", uniqueId);
+
+        //end starting cookie
+        //get unique
+        //alert(document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+
+
+        var screenSizeKoef = 1;
+
+        $('div#userinfo').fadeOut(0);
+        //$('div#map_canvas').fadeOut(0);
+        var height = $(window).height() * screenSizeKoef;
+        var width = $(window).width() * screenSizeKoef;
+
+        
+        $('#bigLogo').css('width', height/10);
+        $('#bigLogo').css('height', height/10);
+        $('#homebutton').css('width', height/11);
+
+        var userinfo = JSON.parse(document.getElementById('userinfo').innerHTML);
+        //document.getElementById('systeminfo').innerHTML = JSON.stringify(systeminfo);
+        var mapHeight = height * 0.9;
+        $('#main_content').css('height', height);
+        $('#main_content').css('width', width);
+        $('#map_canvas').css('height', mapHeight);
+        $('#map_canvas').css('width', width);
+        $('#map_canvas').css('visibility', "hidden");
+        $('#main_screen').css('top', -mapHeight);
+        $('#main_screen').css('height', height*0.9);
+
+        function toMain(){
+         
+            $("div#main_screen").load("pg/mainscreen.html");
+
+    
+            $.ajax({
+                type: "POST",
+                url: "",
+                data: "",
+                success: function() {
+                }
+            });
+
+            $('#map_canvas').css('height', mapHeight);
+            $('#map_canvas').css('width', width);
+            $('#map_canvas').css('visibility', "hidden");
+            $('#main_screen').css('top', -mapHeight);
+        }
+
+        $("div#homebutton").click(function(){
+          if(window.localStorage.getItem("isQuest")!="true"){
+            toMain();
+          }else{
+            if(confirm("Do you really whant to exit?")){
+              window.localStorage.setItem("isQuest","false");
+              qpIterToZero();
+              toMain();
+            }
+          }
+        });
+        
+      
+
+
+    });/// document ready
+
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+
+    function onDeviceReady(){
+      navigator.geolocation.getCurrentPosition(onSuccess, onError);
+    }
+
+
+    var questPositionArray =  [[49.841741,23.998486],[49.837403,24.002129],[49.837743,24.004257],[49.841514, 24.003642],[49.841638, 24.000442]];
+
+        ///MAPS####################################################
+      var mapObject;
+      function initialize() {
+        var mapOptions = {
+          center: { lat: 49.841818, lng: 24.000654},
+          zoom: 16,
+          disableDefaultUI: false,
+          overviewMapControl: false,
+          panControl: false,
+          rotateControl: false,
+          scaleControl: false,
+          zoomControl: false
+        };
+        mapObject = new google.maps.Map(document.getElementById('map_canvas'),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+
+      ///#############_CORDOVA_GPS_################
+      var cur_latitude=49.841818, cur_longitude=24.000654;
+      var markers = [];
+
+      function clearAllMap() {
+        for (var i = 0; i < markers.length; i++) {
+          markers[i].setMap(null);
+        }
+      }
+
+
+      var onSuccess = function(position) {
+        cur_latitude = position.coords.latitude;
+        cur_longitude = position.coords.longitude;
+        //alert(cur_latitude+", "+cur_longitude+", "+position.coords.accuracy);
+      };
+
+      // onError Callback receives a PositionError object
+      //
+      function onError(error) {
+          alert('code: '    + error.code    + '\n' +
+                'message: ' + error.message + '\n');
+      }
+
+      
+
+      var gpsOptions = { maximumAge: 5000, timeout: 5000, enableHighAccuracy: true };
+      var watchGPS = navigator.geolocation.watchPosition(onSuccess, onError, gpsOptions);
+
+      ///###########_CORDOVA_GPS_END_#############
+      var directionsService = new google.maps.DirectionsService();
+      var directionsRequest;
+      var directionRendererVar = null;// = new google.maps.DirectionsRenderer();
+
+      function reloadRoute(destinationStr){
+
+        if(directionRendererVar){
+          directionRendererVar.setMap(null);
+        }
+
+        clearAllMap();
+        directionsRequest = {
+          origin: cur_latitude+", "+cur_longitude,
+          destination: destinationStr.toString(),
+          travelMode: google.maps.DirectionsTravelMode.WALKING,
+          unitSystem: google.maps.UnitSystem.METRIC
+        };
+
+        //directionRendererVar = null;
+        //map.setCenter({lat: 49.841818, lng: 24.000654});
+        //var marker = new google.maps.Marker({position: {lat: 49.741818, lng: 24.000654}, map: mapObject}); 
+        //markers.push(marker);
+        
+
+        //alert(cur_latitude+", "+cur_longitude);
+
+        directionsService.route(
+          directionsRequest,
+          function(response, status)
+          {
+            if (status == google.maps.DirectionsStatus.OK)
+            {
+              directionRendererVar = new google.maps.DirectionsRenderer({
+                map: mapObject,
+                directions: response
+              });
+            }
+            else
+              alert("Unable to retrieve your location");
+          }
+        );
+      }
+
+    var qpIter = 0;//(questPositionArray.length);
+          ///________________HANDLERS_FOR_QUEST____
+    function gpsHandlerFunction(){
+      if(window.localStorage.getItem("isQuest")=="true"){
+        if(qpIter==questPositionArray.length){
+          alert("Congratulation! You Win!");
+          toMain();
+          $("div#main_screen").load("pg/finishquest.html");
+          qpIter = 0;
+          window.localStorage.setItem("isQuest", "false");
+          return;
+        }
+
+        if(Math.abs(Math.pow(cur_latitude,2)-Math.pow(questPositionArray[qpIter][0],2))
+          +Math.abs(Math.pow(cur_longitude,2)-Math.pow(questPositionArray[qpIter][1],2))
+          >0.01)
+        {
+            reloadRoute(questPositionArray[qpIter][0]+", "+questPositionArray[qpIter][1]);
+            
+        }else
+          {
+            qpIter++;
+          }
+      }
+    }
+
+    function qpIterToZero(){qpIter=0;};
+    ///__________________HANDLERS_FOR_QUEST____
+
+      ///MAPS####################################################
+    </script>
+
+
+</head>
+
+<body>
+    <div id="main_content" >
+        <div id="header" align="center">
+        <div style="height:100%; float:left; margin-left:2%;"><img id="bigLogo" src="img/logo.png" height="100%">
+        </div>
+        <div  id="headerLabel"></div>
+        <div id="homebutton"><img src="img/home.png" width="100%"></div>
+        </div>
+        <div id="map_canvas"></div>
+        <div id="main_screen">
+           
+        </div>
+        <div id="footer"></div>
+    </div>
+ <div id="userinfo">{}</div>
+
+</body>
+
+</html>
+
+
+<!--
+-->

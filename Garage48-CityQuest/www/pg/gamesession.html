@@ -1,0 +1,246 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+    //alert(document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+    //alert(document.cookie.replace(/(?:(?:^|.*;\s*)gameSessionId\s*\=\s*([^;]*).*$)|^.*$/, "$1"));
+    var userId = window.localStorage.getItem("userId");
+    //var userId = document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var gameSessionId = window.localStorage.getItem("gameSessionId");
+    //var gameSessionId = document.cookie.replace(/(?:(?:^|.*;\s*)gameSessionId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var iAm = window.localStorage.getItem("iAm");
+    //var iAm = window.localStorage.getItem("userId");
+    //alert(window.localStorage.getItem("userId"));
+    var starterScore = 100;
+    var enemyScore = 100;
+    var starterNumber = 0;
+    var enemyNumber = 0;
+    var isNumberSubmitted = false;
+    var numberHandler;
+    var enemyConnected = false;
+
+    $("div#restartArea").fadeOut(0);
+
+    if(iAm=="starter"){
+        var enemyHandler = setInterval(function () {checkEnemy()}, 2000);
+    }else{
+        enemyConnected=true;
+        $("div#waitForEnemy").fadeOut(0);
+        document.getElementById("enemyScore").innerHTML = 100;
+        numberHandler = setInterval(function () {checkForEnemyNumber()}, 2000);
+    }
+    
+    
+
+    function checkEnemy() {
+        var dataString = 'gamesessionid=' + gameSessionId + '&userid=' + userId + '&iam='+iAm;
+        $.ajax({
+            type: "POST",
+            //url: "http://number.qbxdev.com/php/start_game.php",
+            url: "http://number.qbxdev.com/php/isenemyaccess.php",
+            data: dataString,
+            success: function(returnG) {
+                if(enemyConnected==false&&returnG=="true"){
+                    enemyConnected=true;
+                    window.clearInterval(enemyHandler);
+                    $("div#waitForEnemy").fadeOut(0);
+                    document.getElementById("enemyScore").innerHTML = 100;
+                    numberHandler = setInterval(function () {checkForEnemyNumber()}, 2000);
+                }
+            }
+        });
+    }
+
+    function checkForEnemyNumber(){
+        var dataString = 'gamesessionid=' + gameSessionId + '&userid=' + userId + '&iam='+iAm;
+        $.ajax({
+            type: "POST",
+            //url: "http://number.qbxdev.com/php/start_game.php",
+            url: "http://number.qbxdev.com/php/checkforenemynumber.php",
+            data: dataString,
+            success: function(returnG) {
+                if(enemyConnected==true&&returnG!="0"&&(iAm!="starter"?starterNumber:enemyNumber)==0){
+                    window.clearInterval(numberHandler);
+                    $("div#restartArea").fadeIn(0);
+                    if(iAm=="starter"){
+                        enemyNumber = parseInt(returnG);
+                        $('div#enemyWaiting').fadeOut(0);
+                        if(starterNumber>enemyNumber && starterNumber<enemyNumber*10){
+                            starterScore+=starterNumber;
+                            enemyScore-=enemyNumber;
+                        }else if(enemyNumber==starterNumber){
+                            //do nothing
+                        }else{
+                            starterScore-=starterNumber;
+                            enemyScore+=enemyNumber;
+                        }
+                        document.getElementById("enemyNumber").innerHTML = enemyNumber;
+                        document.getElementById("enemyScore").innerHTML = enemyScore;
+                        document.getElementById("starterScore").innerHTML = starterScore;
+                    }else{
+                        starterNumber = parseInt(returnG);
+                        $('div#enemyWaiting').fadeOut(0);
+                        if(enemyNumber>starterNumber && enemyNumber<starterNumber*10){
+                            starterScore-=starterNumber;
+                            enemyScore+=enemyNumber;
+                        }else if(enemyNumber==starterNumber){
+                            //do nothing
+                        }else{
+                            starterScore+=starterNumber;
+                            enemyScore-=enemyNumber;                            
+                        }
+                        document.getElementById("enemyNumber").innerHTML = starterNumber;
+                        document.getElementById("enemyScore").innerHTML = starterScore;
+                        document.getElementById("starterScore").innerHTML = enemyScore;
+                    }
+
+                }
+            }
+        });
+    }
+
+    function restartGame(){
+        $('div#enemyWaiting').fadeIn(0);
+        $('div#starterWaiting').fadeIn(0);
+        document.getElementById("enemyNumber").innerHTML = "";
+        document.getElementById("starterNumber").innerHTML = "";
+        starterNumber = 0;
+        enemyNumber = 0;
+        isNumberSubmitted = false;
+        numberHandler = setInterval(function () {checkForEnemyNumber()}, 2000);
+        $("div#restartArea").fadeOut(0);
+
+
+        var dataString = 'gamesessionid=' + gameSessionId + '&userid=' + userId + '&iam='+iAm;
+        $.ajax({
+            type: "POST",
+            //url: "http://number.qbxdev.com/php/start_game.php",
+            url: "http://number.qbxdev.com/php/restartgame.php",
+            data: dataString,
+            success: function(returnG) {
+                if(enemyConnected==false&&returnG=="true"){
+                    enemyConnected=true;
+                    window.clearInterval(enemyHandler);
+                    $("div#waitForEnemy").fadeOut(0);
+                    document.getElementById("enemyScore").innerHTML = 100;
+                    numberHandler = setInterval(function () {checkForEnemyNumber()}, 2000);
+                }
+            }
+        });
+
+
+    }
+
+    document.getElementById("restartGameButton").onclick=function(){
+        restartGame();
+    };
+
+
+    document.getElementById("submitNumberButton").onclick=function(){
+        if(iAm=="starter"){
+            starterNumber=parseInt($('#inputnumber').val());
+            $('div#starterWaiting').fadeOut(0);
+            document.getElementById("starterNumber").innerHTML = starterNumber;
+        }else{
+            enemyNumber=parseInt($('#inputnumber').val());
+            $('div#starterWaiting').fadeOut(0);
+            document.getElementById("starterNumber").innerHTML = enemyNumber;
+        }
+
+        var numbersubmit;
+        if(iAm=="starter")numbersubmit=starterNumber;
+        else numbersubmit=enemyNumber;
+
+        if(isNumberSubmitted==false){
+        var dataString = 'gamesessionid=' + gameSessionId + '&userid=' + userId + '&numbersubmit=' + numbersubmit + '&iam='+iAm;
+        $.ajax({
+            type: "POST",
+            //url: "http://number.qbxdev.com/php/start_game.php",
+            url: "http://number.qbxdev.com/php/submitthenumber.php",
+            data: dataString,
+            success: function(returnG) {
+            }
+        });
+        }
+
+        isNumberSubmitted=true;
+     };
+
+    });
+
+</script>
+
+<style type="text/css">
+table{
+	width: 100%;
+}
+
+td,
+tr {
+
+    border: 1px solid black;
+}
+td {
+    width: 50%;
+}
+</style>
+
+<table style="border: 1px solid black;">
+
+    <tr>
+        <td colspan="2">
+            <h1>Your Score</h1>
+            <h3 id="starterScore">100</h3>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <h2>Enemy Score</h2>
+            <div id="waitForEnemy">
+                <img src="img/waitforenemy.gif"><br>Wait For Enemy!
+            </div>
+            <h3 id="enemyScore">
+            </h3>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <h1>Your Number</h1>
+            <div id="starterNumber">
+            </div>
+            <div id="starterWaiting">
+                <img src="img/21.gif">
+            </div>
+        </td>
+        <td>
+            <h2>Enemy Number</h2>
+            <div id="enemyNumber">
+            </div>
+            <div id="enemyWaiting">
+                <img src="img/21.gif">
+            </div>
+        </td>
+    </tr>
+    <tr>
+
+    	<td colspan="2">
+    	<center>
+        <form id="submitNumberForm" onsubmit="return false;">
+            <input type="text" size="5" name="inputnumber" id="inputnumber" value="00" maxlength="2" onclick='' /><br>
+        </form>
+        <button style="height:35px; width:50%;" id="submitNumberButton" >Enter number</button>
+        </center>
+        </td>
+    </tr>
+
+    <tr>
+    	<td colspan="2">
+    		<center>History</center>
+    	</td>
+    </tr>
+
+</table>
+
+<div style="z-index:100; position:absolute; top:10%; left:0px;  width:100%; height:100%;" id="restartArea">
+<div style="width:100%; height:100%; background-color:#000; opacity:0.3;"></div>
+<button style="position:absolute; top:30%; left:45%; opacity:1;" id="restartGameButton">Restart</button>
+</div>

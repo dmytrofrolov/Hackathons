@@ -1,0 +1,32 @@
+<script type="text/javascript">
+    document.getElementById('headerLabel').innerHTML = "Raiting";
+    document.getElementById('questlist').innerHTML = "";
+    document.getElementById('userinfo').innerHTML=
+        //document.cookie.replace(/(?:(?:^|.*;\s*)userinfo\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        window.localStorage.getItem("userinfo");
+
+    var userinfo = JSON.parse(document.getElementById('userinfo').innerHTML);
+
+    $.ajax({
+        type: "GET",
+        url: "http://world-of-happiness.com:8123/data.php",
+        data: "score",
+        success: function(returnD) {
+
+            var questinfo = JSON.parse(returnD);
+            for (var i = 0; i < questinfo.length; i++) {
+                
+                $('div#questlist').append(
+                    "<div id=\"quest"+questinfo[i]['login']+"\" class=\"questblock\"><div class=\"questNumber\">"+questinfo[i]['score']+"</div><div style=\"padding-top:30px; height:70px; font-size:1.8em;\">"+questinfo[i]['name']+" "+questinfo[i]['surname']+"</div></div>"
+                    );
+            };
+        }
+    });
+
+
+</script>
+
+<div style="overflow-y:scroll; overflow-x:scroll;">
+    <div id="questlist">
+    </div>  
+</div>

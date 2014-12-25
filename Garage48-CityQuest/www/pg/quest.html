@@ -1,0 +1,43 @@
+<script type="text/javascript">
+    document.getElementById('headerLabel').innerHTML = "CityQUEST";
+    window.localStorage.setItem("isQuest", "true");
+    document.getElementById('userinfo').innerHTML=
+        //document.cookie.replace(/(?:(?:^|.*;\s*)userinfo\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        window.localStorage.getItem("userinfo");
+    var userinfo = JSON.parse(document.getElementById('userinfo').innerHTML);
+    var questId = window.localStorage.getItem("questStarted");
+
+
+    $('#map_canvas').css('visibility', "visible");
+
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: "",
+        success: function(returnD) {
+            gpsHandlerFunction();
+            var gpsHandler = setInterval(function() {gpsHandlerFunction();}, 3000);
+        }
+    });
+
+    
+
+    //GET questPositionArray
+    //start timer handler
+    //if  you moved reloadRoute
+    //if there are not any points left show congratulation window
+
+</script>
+
+<div id="questElements">
+ 
+    <div id="timer">
+        
+    </div>
+    <br><br>
+    <button onclick='reloadRoute("49.836944, 24.005");'>MOVE MAP<br></button><br>
+    <br>
+    <div id="success">
+    </div> 
+
+</div>

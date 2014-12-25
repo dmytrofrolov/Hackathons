@@ -1,0 +1,70 @@
+<script type="text/javascript">
+    document.getElementById('headerLabel').innerHTML = "Select Quest";
+
+    document.getElementById('userinfo').innerHTML=
+        //document.cookie.replace(/(?:(?:^|.*;\s*)userinfo\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        window.localStorage.getItem("userinfo");
+
+    var userinfo = JSON.parse(document.getElementById('userinfo').innerHTML);
+
+    $.ajax({
+        type: "GET",
+        url: "http://world-of-happiness.com:8123/data.php",
+        data: "quest=yes",
+        success: function(returnD) {
+
+            var questinfo = JSON.parse(returnD);
+            for (var i = 0; i < questinfo.length; i++) {
+                
+                $('div#questlist').append(
+                    "<div onclick=\"questBlockResize("+questinfo[i]['id']+")\" id=\"quest"+questinfo[i]['id']+"\" class=\"questblock\"><div class=\"questNumber\">"+questinfo[i]['id']+"</div><div style=\"padding-top:30px; height:70px; font-size:1.8em;\">"+questinfo[i]['title']+"</div><div style=\"height:100px; font-size:1.2em; width:"+($(window).width()-100).toString()+"px;\">Description:<br>"+questinfo[i]['description']+"</div><div class=\"startButton\" onclick=\"startQuest("+questinfo[i]['id']+")\">START!</div></div>"
+                    );
+            };
+        }
+    });
+
+    function startQuest(idToStart){
+        //document.cookie="questStarted="+idToStart;
+        window.localStorage.setItem("questStarted", idToStart);
+        $("div#main_screen").load("pg/quest.html");
+    }
+
+function questBlockResize(number){
+        $('div.questblock').animate({height:100},50);
+        $("div#quest"+number.toString()).animate({height:200},100);
+
+    }
+
+</script>
+
+<div>
+    <div id="questlist">
+    <!--
+        <div onclick='questBlockResize("01")' id="quest01" class="questblock">
+            <div class="questNumber">01</div>
+            <div style="padding-top:30px; height:70px; font-size:1.8em;">
+                Some simple description
+            </div>
+            <div style="height:100px; font-size:1.2em;">
+                Description:<br>
+            </div>
+            <div class="startButton" onclick="startQuest(1)">START!</div>
+        </div>
+
+        <div onclick='questBlockResize("02")' id="quest02" class="questblock">
+            <div class="questNumber">02</div>
+            <div style="padding-top:30px; height:70px; font-size:1.8em;">
+                Some simple description
+            </div>
+            <div style="height:100px; font-size:1.2em;">
+                Description:<br>
+            </div>
+            <div class="startButton" onclick="startQuest(2)">START!</div>
+        </div>
+    -->
+    </div>  
+</div>
+
+<div style="position:absolute; bottom:-3px;">
+    <img src="img/quests.png" width="100%">
+</div>

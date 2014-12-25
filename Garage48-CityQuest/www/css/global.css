@@ -1,0 +1,89 @@
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+/*Chat box */
+.chatBox{
+	border: 1px solid #000;
+	width: 500px;
+	margin: 50px;
+	background-color: #9f6;
+
+}
+
+.chatBox .user{
+	text-align: right;
+	padding: 5px;
+}
+
+.user input#signIn{
+	color: blue;
+	text-decoration: none;
+	background: none;
+	border: none;
+}
+
+.user input#signIn:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.user input{
+	margin-right: 5px;
+}
+
+.user .error{
+	color: red;
+	margin-right: 5px;
+}
+
+
+
+.chatBox .main{
+
+	background-color: #fff;
+	height: 300px;
+	padding: 5px;
+	overflow: auto;
+}
+
+.chatBox .messageBox{
+	padding: 7px 5px 5px 5px;
+}
+
+#newMessageContent{
+	font: 14px arial, sans-serif;
+	width: 400px;
+	height: 32px;
+}
+
+#newMessageSend{
+	height: 36px;
+	width: 80px;
+}
+
+.chatBox .messageBox .left{
+	float: left;
+	width: 410px;
+}
+
+#messageBoxSignIn{
+	padding: 8px;
+	width: 100%; 
+}
+
+/*sign in and out*/
+
+#signOut {
+	font: 14px arial, sans-serif;
+	color: blue;
+	text-decoration: none;
+	margin-left: 8px;
+}
+
+#signOut:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}

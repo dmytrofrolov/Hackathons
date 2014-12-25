@@ -1,0 +1,40 @@
+<script type="text/javascript">
+            $('#whaitanim').fadeOut(0);
+
+	        $('#startGame').click(function() {
+            $('#whaitanim').fadeIn(0);
+            var gamename = $('#gamename').val();
+            var startername = $('#startername').val();
+            //var uniqueId = document.cookie.replace(/(?:(?:^|.*;\s*)userId\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            var uniqueId = window.localStorage.getItem("userId");
+            var dataString = 'gamename=' + gamename + '&startername=' + startername + '&uniqueid=' + uniqueId;
+            $.ajax({
+                type: "POST",
+                //url: "http://number.qbxdev.com/php/start_game.php",
+                url: "http://number.qbxdev.com/php/start_game.php",
+                data: dataString,
+                success: function(returnG) {
+                    window.localStorage.setItem("gameSessionId", returnG);
+                    window.localStorage.setItem("iAm", "starter");
+                    //document.cookie="gameSessionId="+returnG;
+                    //document.cookie="iAm=starter";
+                    $("div#main_screen").load("pg/gamesession.html");
+                }
+            });
+        });
+</script>
+<div>
+<center>
+<form  name="signIn" onsubmit="return false">
+    Game name:<br>
+    <input type="text" size="35" name="gamename" id="gamename" value="gamename" /> <br>
+    <br>
+    Your Name:
+    <br>
+    <input type="text" size="35" name="startername" id="startername" value="John" /> <br>
+    <br><br>
+    <input style="height:35px; width:30%;" type="submit" id="startGame" value="Start game" />
+</form>
+</center>
+<center><div id="whaitanim"><img src="img/load.gif" width="50%" height="50%"></div></center>
+</div>

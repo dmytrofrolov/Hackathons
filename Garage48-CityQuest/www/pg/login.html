@@ -1,0 +1,44 @@
+<script type="text/javascript">
+    document.getElementById('headerLabel').innerHTML = "Login";
+    $('div#wait').fadeOut(0);
+
+	$('button#loginIn').click(function(){
+            $('div#wait').fadeIn(0);
+			var sendData = "opt=0&login="+$('#username').val()+"&password="+$('#password').val()+"&current_x=46&current_y=23";
+		    $.ajax({
+                type: "GET",
+                url: "http://world-of-happiness.com:8123/data.php",
+                data: sendData,
+                success: function(returnD) {
+                    var userinfo = JSON.parse(returnD);
+                    if(userinfo['session_id']!="0")
+                    {
+                        window.localStorage.setItem("userinfo", "{\"id\":\""+userinfo['session_id']+"\",\"name\":\""+userinfo['name']+"\",\"surname\":\""+userinfo['surname']+"\"}");
+
+                    	$('div#homebutton').fadeIn(10);
+                        window.localStorage.setItem("loggenIn", "true");
+            			$("div#main_screen").load("pg/mainscreen.html");
+                    }else{
+                        $('div#wait').fadeOut(0);
+                        alert("Error! Incorrect login or password =(");
+                    }
+                }
+            });
+	});
+</script>
+
+<center>
+<div style="position:absolute; height:200px; width:100%; top:0%;" onclick='$("div#main_screen").load("pg/starter.html");'></div>
+<img id="bigLogo" src="img/full_logo.png" width="90%"><br>
+<div  id="loginRegisterForm">
+    <p class="label">Username:</p>
+    <input type="text" name="username" id="username" >
+    <p class="label">Password:</p>
+    <input type="password" name="password" id="password" ><br><br>
+    <div style="width:60%">
+        <button id="loginIn" class="loginOrRegisterButton">Login</button>
+        <img align="right" src="img/facebook_142.png" width="48px">
+    </div>
+</div>
+<div id="wait"><img src="img/wait.gif"></div>
+</center>
