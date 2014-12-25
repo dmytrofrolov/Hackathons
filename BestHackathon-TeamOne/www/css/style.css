@@ -1,0 +1,300 @@
+/* Eric Meyer's CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/* End of Eric Meyer's CSS Reset */
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+	display: block;
+}
+body {
+	font: 12px/18px Arial, sans-serif;
+}
+.wrapper {
+	min-width: 760px;
+	max-width: 1440px;
+	margin: 0 auto;
+}
+
+
+/* Header
+-----------------------------------------------------------------------------*/
+.header {
+	height: 150px;
+	background: #FFE680;
+}
+
+
+/* Middle
+-----------------------------------------------------------------------------*/
+.middle {
+	width: 100%;
+	position: relative;
+}
+.middle:after {
+	display: table;
+	clear: both;
+	content: '';
+}
+.container_menu {
+	width: 100%;
+	float: left;
+	overflow: hidden;
+}
+
+.container_menu input{
+	width: 250px;
+	height: 30px;
+}
+
+.login_but {
+	height:38px;
+}
+.content {
+	padding: 60px 0 0 270px;
+}
+
+.content.index {
+	padding: 0 270px 0 0;
+}
+
+/* Left Sidebar
+-----------------------------------------------------------------------------*/
+.left-sidebar {
+	float: left;
+	width: 250px;
+	margin-left: -100%;
+	position: relative;
+	background: #545D6D;
+	margin-top: 60px;
+}
+
+/* Right Sidebar
+-----------------------------------------------------------------------------*/
+.right-sidebar {
+	float: left;
+	width: 250px;
+	margin-left: -250px;
+	position: relative;
+	background: #FFACAA;
+}
+
+
+
+/* Footer
+-----------------------------------------------------------------------------*/
+.footer {
+	margin-top: 10px;
+	height: 100px;
+	background: #BFF08E;
+}
+
+/* Sidebar Menu
+-----------------------------------------------------------------------------*/
+.left-sidebar {
+	font-family: Calibry;
+	font-size: 23px;
+	color: #d3d7de;
+}
+
+.left-sidebar hr {
+	height: 1px;
+	margin: 0;
+	color: #545d6d;
+}
+
+.sidebar_name, .sidebar_me, .sidebar_item {
+	height: 50px;
+}
+
+.sidebar_name {
+	background-color: #3d4452;
+	text-align: center;
+	font-size: 25px;
+	line-height: 50px;
+	display: block;
+}
+
+.sidebar_me {
+	background-color: #545e70;
+}
+
+.sidebar_item {
+	background-color: #4c5566;
+}
+
+.sidebar_item:hover {
+	background-color: #545e70;
+}
+
+.sidebar_item_name {
+	padding: 15px;
+	margin-left: 30px;
+}
+
+.sidebar_footer {
+	background-color: #4b5465;
+}
+
+.sidebar_item_name a, .sidebar_item_name a:visited, .sidebar_item_name a:active  {
+	text-decoration: none;
+	color: #d3d7de;
+}
+
+.sidebar_me_ava {
+	position: relative;
+	display: inline-block;
+	float: left;
+	background-size: 100%;
+	width: 33px;
+	height: 33px;
+	border-radius: 50px;
+	margin-left: 10px;
+}
+
+.sidebar_me_name {
+	padding: 15px;
+	margin-left: 30px;
+}
+
+/* Tasks
+-----------------------------------------------------------------------------*/
+
+.tasks {
+	text-align: center;
+}
+
+.task {
+	height: 70px;
+	border: 1px solid #8b8f86;
+	border-radius: 5px;
+	width: 90%;
+	margin-bottom: 10px;
+}
+
+.task_add {
+	border: 0px solid #8b8f86;
+	border-radius: 5px;
+	padding: 10px 0px;
+	width: 50%;
+	font-size: 1.2em;
+	margin-left: 20%;
+	opacity: 0.8;
+}
+
+.task_add:hover{
+	opacity: 1;
+	cursor: pointer;
+}
+
+.task_add input{
+	width: 250px;
+	height: 35px;
+}
+
+.task_add textarea{
+	width: 350px;
+	height: 135px;
+}
+
+.task_add button{
+	width: 60px;
+	height: 35px;
+	border-radius: 5px;
+}
+
+.task_add_button{
+	margin-left: -8px;
+	width: 100%;
+}
+
+.task div.aimid{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	margin-left: 10px;
+	margin-top: auto;
+	margin-bottom: auto;
+	display: none;
+}
+
+.task div{
+	font-size: 1.2em;
+	overflow: hidden;
+	padding: 10px;
+	text-align: left;
+}
+
+.task div.title{
+	position: absolute;
+	left: 0px;
+	width: 30%;
+	height: 100%;
+	top: 0px;
+	border: 0px solid black;
+	overflow: hidden;
+}
+
+
+.task div.description{
+	position: absolute;
+	right: 0px;
+	width: 70%;
+	height: 100%;
+	top: 0px;
+	border: 0px solid black;
+	overflow: hidden;
+	text-align: justify;
+}
+
+
+td a{
+	color: #223 !important;
+}
+
+td{
+	font-size: 1.2em;
+	font-weight: 800;
+	width: 200px;
+	height: 30px;
+}
